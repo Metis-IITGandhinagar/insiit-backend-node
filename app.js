@@ -7,7 +7,9 @@ const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = 'mongodb+srv://anmol4979199:anmol123@test.8oysegr.mongodb.net/insiit'; // Update with your MongoDB connection string
+const MONGODB_URI = 'mongodb+srv://anmol4979199:anmol123@test.8oysegr.mongodb.net/insiit';
+// const MONGODB_URI = 'mongodb://localhost:27017/insiit';
+
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })

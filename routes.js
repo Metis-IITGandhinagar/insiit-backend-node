@@ -245,13 +245,34 @@ router.get('/outlets/:id', async (req, res) => {
 });
 
 // Create a new outlet
+// router.post('/outlets', async (req, res) => {
+//   const outlet = new Outlet(req.body);
+//   console.log(outlet);
+//   try {
+//     const newOutlet = await outlet.save();
+//     res.status(201).json(newOutlet);
+//   } catch (err) {
+//     res.status(400).json({ message: err.message });
+//   }
+// });
+
 router.post('/outlets', async (req, res) => {
-  const outlet = new Outlet(req.body);
+  const outlet = new Outlet({
+    name: req.body.name,
+    location: req.body.location,
+    landmark: req.body.landmark,
+    open_time: req.body.open_time,
+    close_time: req.body.close_time,
+    rating: req.body.rating,
+    menu: req.body.menu,
+    image: req.body.image
+  });
+
   try {
     const newOutlet = await outlet.save();
     res.status(201).json(newOutlet);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 });
 
@@ -292,10 +313,35 @@ router.patch('/outlets/:id', getOutlet, async (req, res) => {
 // Delete an outlet
 router.delete('/outlets/:id', getOutlet, async (req, res) => {
   try {
-    await res.outlet.remove();
+    await res.outlet.findByIdAndDelete();
     res.json({ message: 'Outlet deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+});
+
+router.get('/outlets/menu/:outletId', async (req, res) => {
+  const { outletId } = req.params;
+
+  try {
+    // Find outlet by ID
+    const outlet = await Outlet.findById(outletId);
+    
+    if (!outlet) {
+      return res.status(404).json({ error: 'Outlet not found' });
+    }
+
+    // Extract name and price from each menu item
+    const menuItems = outlet.menu.map(item => ({
+      name: item.name,
+      price: item.price
+    }));
+
+    // Return menu items
+    res.json(menuItems);
+  } catch (error) {
+    console.error('Error fetching menu:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
