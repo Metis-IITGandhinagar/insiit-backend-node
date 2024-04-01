@@ -13,10 +13,8 @@ const swaggerFile = require('./swagger_output.json')
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-// const MONGODB_URI = 'mongodb+srv://anmol4979199:anmol123@test.8oysegr.mongodb.net/insiit';
-const MONGODB_URI = process.env.MongoDBlocal
-// const MONGODB_URI = process.env.MongoDBAtlas
-// const MONGODB_URI = 'mongodb://localhost:27017/insiit';
+// const MONGODB_URI = process.env.MongoDBlocal
+const MONGODB_URI = process.env.MongoDBAtlas
 
 
 // Connect to MongoDB
