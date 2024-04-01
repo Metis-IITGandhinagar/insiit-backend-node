@@ -1,4 +1,5 @@
 // routes.js
+require('dotenv').config();
 const express = require('express');
 const uuid = require('uuid');
 
@@ -9,8 +10,14 @@ const Outlet = require('./outletmodel');
 
 const router = express.Router();
 
+
 // Create a new Mess Menu item
 router.post('/mess-menu', async (req, res) => {
+  
+   /*#swagger.tags = ['Mess Menu'] 
+   #swagger.security = [{
+            "apiKeyAuth": []
+    }] */
   try {
     const newMenuItem = await MessMenu.create(req.body);
     res.status(201).json(newMenuItem);
@@ -22,16 +29,14 @@ router.post('/mess-menu', async (req, res) => {
 
 // Get all Mess Menu items
 router.get('/mess-menu', async (req, res) => {
+  // #swagger.tags = ['Mess Menu']
   try {
-    // Fetch Mess Menu data from the database
     const menuData = await MessMenu.findOne();
 
-    // Check if data exists
     if (!menuData) {
       return res.status(404).json({ message: 'Mess Menu data not found' });
     }
 
-    // Send the retrieved data as the response
     res.json(menuData);
   } catch (error) {
     console.error(error);
@@ -41,6 +46,7 @@ router.get('/mess-menu', async (req, res) => {
 
 // Get a Mess Menu item by ID
 router.get('/mess-menu/:id', async (req, res) => {
+  // #swagger.tags = ['Mess Menu']
   const { id } = req.params;
   try {
     const menuItem = await MessMenu.findById(id);
@@ -57,22 +63,19 @@ router.get('/mess-menu/:id', async (req, res) => {
 
 // Update a Mess Menu item by ID
 router.put('/mess-menu/:id', async (req, res) => {
+  // #swagger.tags = ['Mess Menu']
   const { id } = req.params;
-  const mess = req.body; // Assuming you're sending the updated mess_name and mess array in the request body
+  const mess = req.body;
   console.log(mess);
   try {
-    // Find the menu item by ID
     let menuItem = await MessMenu.findById(id);
 
     if (!menuItem) {
       return res.status(404).json({ message: 'Mess Menu item not found' });
     }
 
-    // Update the menu item fields
-    // menuItem.mess_name = mess_name;
     menuItem.mess = mess;
 
-    // Save the updated menu item
     menuItem = await menuItem.save();
 
     res.json(menuItem);
@@ -84,6 +87,7 @@ router.put('/mess-menu/:id', async (req, res) => {
 
 // Delete a Mess Menu item by ID
 router.delete('/mess-menu/:id', async (req, res) => {
+  // #swagger.tags = ['Mess Menu']
   const { id } = req.params;
   try {
     const deletedMenuItem = await MessMenu.findByIdAndDelete(id);
@@ -99,8 +103,10 @@ router.delete('/mess-menu/:id', async (req, res) => {
 
 //BUSES
 
+
 // Route for fetching all bus schedules
 router.get('/buses', async (req, res) => {
+  // #swagger.tags = ['Buses']
   try {
     const busSchedules = await BusSchedule.find();
     res.json(busSchedules);
@@ -111,6 +117,8 @@ router.get('/buses', async (req, res) => {
 
 // Route for creating a new bus schedule
 router.post('/buses', async (req, res) => {
+  // #swagger.tags = ['Buses']
+
   try {
     const busSchedule = new BusSchedule(req.body);
     console.log(busSchedule);
@@ -121,8 +129,10 @@ router.post('/buses', async (req, res) => {
   }
 });
 
-// Route for fetching names of 'from' and 'to' fields
+// Route for geting all towns/stops
 router.get('/towns', async (req, res) => {
+  // #swagger.tags = ['Buses']
+
   try {
     const sources = await BusSchedule.distinct('Source');
     const destinations = await BusSchedule.distinct('Destination');
@@ -135,10 +145,10 @@ router.get('/towns', async (req, res) => {
 
 // Route for searching buses from source to destination
 router.get('/search', async (req, res) => {
+  // #swagger.tags = ['Buses']
   const { source, destination } = req.query;
 
   try {
-    // Find buses that match the source and destination
     const buses = await BusSchedule.find({ Source: source, Destination: destination });
 
     if (buses.length === 0) {
@@ -153,6 +163,8 @@ router.get('/search', async (req, res) => {
 
 // GET Event API
 router.get('/events', async (req, res) => {
+  // #swagger.tags = ['Events']
+
   try {
     const events = await Event.find();
     res.json(events);
@@ -162,6 +174,8 @@ router.get('/events', async (req, res) => {
 });
 
 router.get('/events/:id', async (req, res) => {
+  // #swagger.tags = ['Events']
+
   const { id } = req.params;
   try {
     const eventData = await Event.findById(id);
@@ -177,6 +191,8 @@ router.get('/events/:id', async (req, res) => {
 
 // POST Event API
 router.post('/events', async (req, res) => {
+  // #swagger.tags = ['Events']
+
   const event = new Event({
     event_name: req.body.event_name,
     location: req.body.location,
@@ -198,6 +214,8 @@ router.post('/events', async (req, res) => {
 
 // PUT Event API
 router.put('/events/:eventid', async (req, res) => {
+  // #swagger.tags = ['Events']
+
   try {
     const event = await Event.findById(req.params.eventid);
     if (!event) {
@@ -221,7 +239,11 @@ router.put('/events/:eventid', async (req, res) => {
 
 
 ///// FOR OUTLETS
+
+
 router.get('/outlets', async (req, res) => {
+  // #swagger.tags = ['Outlets']
+
   try {
     const outlets = await Outlet.find();
     res.json(outlets);
@@ -231,6 +253,8 @@ router.get('/outlets', async (req, res) => {
 });
 
 router.get('/outlets/:id', async (req, res) => {
+  // #swagger.tags = ['Outlets']
+
   const { id } = req.params;
   try {
     const outletData = await Outlet.findById(id);
@@ -244,19 +268,9 @@ router.get('/outlets/:id', async (req, res) => {
   }
 });
 
-// Create a new outlet
-// router.post('/outlets', async (req, res) => {
-//   const outlet = new Outlet(req.body);
-//   console.log(outlet);
-//   try {
-//     const newOutlet = await outlet.save();
-//     res.status(201).json(newOutlet);
-//   } catch (err) {
-//     res.status(400).json({ message: err.message });
-//   }
-// });
-
 router.post('/outlets', async (req, res) => {
+  // #swagger.tags = ['Outlets']
+
   const outlet = new Outlet({
     name: req.body.name,
     location: req.body.location,
@@ -278,6 +292,8 @@ router.post('/outlets', async (req, res) => {
 
 // Update an outlet
 router.patch('/outlets/:id', getOutlet, async (req, res) => {
+  // #swagger.tags = ['Outlets']
+
   if (req.body.name != null) {
     res.outlet.name = req.body.name;
   }
@@ -312,6 +328,11 @@ router.patch('/outlets/:id', getOutlet, async (req, res) => {
 
 // Delete an outlet
 router.delete('/outlets/:id', getOutlet, async (req, res) => {
+   /* #swagger.tags = ['Outlets']
+   #swagger.security = [{
+            "apiKeyAuth": ['X-API-KEY']
+    }] */
+
   try {
     await res.outlet.findByIdAndDelete();
     res.json({ message: 'Outlet deleted' });
@@ -321,17 +342,17 @@ router.delete('/outlets/:id', getOutlet, async (req, res) => {
 });
 
 router.get('/outlets/menu/:outletId', async (req, res) => {
+  // #swagger.tags = ['Outlets']
+
   const { outletId } = req.params;
 
   try {
-    // Find outlet by ID
     const outlet = await Outlet.findById(outletId);
-    
+
     if (!outlet) {
       return res.status(404).json({ error: 'Outlet not found' });
     }
 
-    // Extract name and price from each menu item
     const menuItems = outlet.menu.map(item => ({
       name: item.name,
       price: item.price

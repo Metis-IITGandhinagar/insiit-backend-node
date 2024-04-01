@@ -1,13 +1,21 @@
-// index.js
+
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const routes = require('./routes');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+const path = require('path');
+const swaggerFile = require('./swagger_output.json')
+
 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = 'mongodb+srv://anmol4979199:anmol123@test.8oysegr.mongodb.net/insiit';
+// const MONGODB_URI = 'mongodb+srv://anmol4979199:anmol123@test.8oysegr.mongodb.net/insiit';
+const MONGODB_URI = process.env.MongoDBlocal
+// const MONGODB_URI = process.env.MongoDBAtlas
 // const MONGODB_URI = 'mongodb://localhost:27017/insiit';
 
 
@@ -19,6 +27,15 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true 
 // Middleware
 app.use(express.json());
 app.use(cors());
+// app.set('view engine', 'ejs');
+
+app.get('/', (req, res) => {
+  res.redirect('/api-docs');
+});
+
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+
 
 // Routes
 app.use('/api', routes);
