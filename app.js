@@ -15,6 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 // const MONGODB_URI = process.env.MongoDBlocal
 const MONGODB_URI = process.env.MongoDBAtlas
+//It uses mongoAtlas
 
 
 // Connect to MongoDB
