@@ -29,7 +29,7 @@ app.use(cors());
 // app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-  res.redirect('/api-docs');
+  res.send(' Go to /api-docs for API Documentation');
 });
 
 
