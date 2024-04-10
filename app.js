@@ -7,7 +7,7 @@ const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const path = require('path');
-const swaggerFile = require('./swagger_output.json')
+const swaggerFile = require('./public/swagger_output.json')
 
 
 
