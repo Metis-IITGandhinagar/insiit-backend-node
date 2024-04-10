@@ -7,25 +7,19 @@ const MessMenu = require('./models');
 const BusSchedule = require('./busmodel');
 const Event = require('./eventmodel');
 const Outlet = require('./outletmodel');
+const StudentBody = require('./representmodel');
 
 const router = express.Router();
 
 
-// Create a new Mess Menu item
-router.post('/mess-menu', async (req, res) => {
-  
-   /*#swagger.tags = ['Mess Menu'] 
-   #swagger.security = [{
-            "apiKeyAuth": []
-    }] */
-  try {
-    const newMenuItem = await MessMenu.create(req.body);
-    res.status(201).json(newMenuItem);
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ message: 'Failed to create Mess Menu item' });
+const checkApiKey = (req, res, next) => {
+  const apiKey = req.headers['x-api-key'];
+  if (apiKey !== process.env.API_KEY || apiKey === '') {
+    return res.status(401).json({ error: 'Unauthorized - Invalid API key. Congtact metis@iitgn.ac.in to get one.' });
   }
-});
+  next();
+};
+
 
 // Get all Mess Menu items
 router.get('/mess-menu', async (req, res) => {
@@ -41,6 +35,22 @@ router.get('/mess-menu', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+// Create a new Mess Menu item
+router.post('/mess-menu', checkApiKey, async (req, res) => {
+
+  /*#swagger.tags = ['Mess Menu'] 
+  #swagger.security = [{
+           "apiKeyAuth": []
+   }] */
+  try {
+    const newMenuItem = await MessMenu.create(req.body);
+    res.status(201).json(newMenuItem);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ message: 'Failed to create Mess Menu item' });
   }
 });
 
@@ -62,7 +72,7 @@ router.get('/mess-menu/:id', async (req, res) => {
 
 
 // Update a Mess Menu item by ID
-router.put('/mess-menu/:id', async (req, res) => {
+router.put('/mess-menu/:id', checkApiKey, async (req, res) => {
   // #swagger.tags = ['Mess Menu']
   const { id } = req.params;
   const mess = req.body;
@@ -86,7 +96,7 @@ router.put('/mess-menu/:id', async (req, res) => {
 });
 
 // Delete a Mess Menu item by ID
-router.delete('/mess-menu/:id', async (req, res) => {
+router.delete('/mess-menu/:id', checkApiKey, async (req, res) => {
   // #swagger.tags = ['Mess Menu']
   const { id } = req.params;
   try {
@@ -101,8 +111,8 @@ router.delete('/mess-menu/:id', async (req, res) => {
   }
 });
 
-//BUSES
 
+//BUSES
 
 // Route for fetching all bus schedules
 router.get('/buses', async (req, res) => {
@@ -115,8 +125,24 @@ router.get('/buses', async (req, res) => {
   }
 });
 
+// get by id
+router.get('/buses/:id', async (req, res) => {
+  // #swagger.tags = ['Buses']
+  const { id } = req.params;
+  try {
+    const bus = await BusSchedule.findById(id);
+    if (!bus) {
+      return res.status(404).json({ message: 'Bus not found' });
+    }
+    res.json(bus);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
 // Route for creating a new bus schedule
-router.post('/buses', async (req, res) => {
+router.post('/buses', checkApiKey, async (req, res) => {
   // #swagger.tags = ['Buses']
 
   try {
@@ -143,7 +169,52 @@ router.get('/towns', async (req, res) => {
   }
 });
 
+// route for updating bus schedule
+router.put('/buses/:id', checkApiKey, async (req, res) => {
+  // #swagger.tags = ['Buses']
+
+  try {
+    const bus = await BusSchedule.findById(req.params.id);
+    if (!bus) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    bus.BusName = req.body.BusName;
+    bus.DepartureTime = req.body.DepartureTime;
+    bus.Destination = req.body.Destination;
+    bus.Source = req.body.Source;
+    bus.Stops = req.body.Stops;
+
+    const updatedBus = await bus.save();
+    res.json(updatedBus);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.delete('/buses/:id', checkApiKey, async (req, res) => {
+  /* #swagger.tags = ['Buses'] */
+  const { id } = req.params;
+  console.log(id);
+  try {
+    // Find outlet by ID and delete it
+    const deletedBus = await BusSchedule.findByIdAndDelete(id);
+    if (!deletedBus) {
+      return res.status(404).json({ error: 'Bus not found' });
+    }
+    res.json({ message: 'Deleted Successfully' });
+  } catch (error) {
+    console.error('Error deleting outlet:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// TODO: Add route for deleting bus schedule
+
+
+
 // Route for searching buses from source to destination
+
 router.get('/search', async (req, res) => {
   // #swagger.tags = ['Buses']
   const { source, destination } = req.query;
@@ -160,6 +231,8 @@ router.get('/search', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+//EVENTS API
 
 // GET Event API
 router.get('/events', async (req, res) => {
@@ -189,8 +262,8 @@ router.get('/events/:id', async (req, res) => {
   }
 });
 
-// POST Event API
-router.post('/events', async (req, res) => {
+// New Event
+router.post('/events', checkApiKey, async (req, res) => {
   // #swagger.tags = ['Events']
 
   const event = new Event({
@@ -212,8 +285,8 @@ router.post('/events', async (req, res) => {
 });
 
 
-// PUT Event API
-router.put('/events/:eventid', async (req, res) => {
+// Edit Event API
+router.put('/events/:eventid', checkApiKey, async (req, res) => {
   // #swagger.tags = ['Events']
 
   try {
@@ -236,6 +309,26 @@ router.put('/events/:eventid', async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
+
+//route for deleting event
+router.delete('/events/:id', checkApiKey, async (req, res) => {
+  /* #swagger.tags = ['Events'] */
+  const { id } = req.params;
+  console.log(id);
+  try {
+    // Find event by ID and delete it
+    const deletedEvent = await Event.findByIdAndDelete(id);
+    if (!deletedEvent) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+    res.json({ message: 'Deleted Successfully' });
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 
 
 ///// FOR OUTLETS
@@ -268,7 +361,7 @@ router.get('/outlets/:id', async (req, res) => {
   }
 });
 
-router.post('/outlets', async (req, res) => {
+router.post('/outlets', checkApiKey, async (req, res) => {
   // #swagger.tags = ['Outlets']
 
   const outlet = new Outlet({
@@ -291,7 +384,7 @@ router.post('/outlets', async (req, res) => {
 });
 
 // Update an outlet
-router.patch('/outlets/:id', getOutlet, async (req, res) => {
+router.patch('/outlets/:id', getOutlet, checkApiKey, async (req, res) => {
   // #swagger.tags = ['Outlets']
 
   if (req.body.name != null) {
@@ -326,21 +419,44 @@ router.patch('/outlets/:id', getOutlet, async (req, res) => {
   }
 });
 
-// Delete an outlet
-router.delete('/outlets/:id', getOutlet, async (req, res) => {
-   /* #swagger.tags = ['Outlets']
-   #swagger.security = [{
-            "apiKeyAuth": ['X-API-KEY']
-    }] */
+// Update an outlet Menu
+router.patch('/api/outlets/:outletId', checkApiKey, async (req, res) => {
+  const { outletId } = req.params;
+  console.log(outletId);
+  const { menu } = req.body;
+
 
   try {
-    await res.outlet.findByIdAndDelete();
-    res.json({ message: 'Outlet deleted' });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const updatedOutlet = await Outlet.findByIdAndUpdate(outletId, { menu }, { new: true });
+    if (!updatedOutlet) {
+      return res.status(404).json({ error: 'Outlet not found' });
+    }
+
+    res.json({ message: 'Menu updated successfully', outlet: updatedOutlet });
+  } catch (error) {
+    console.error('Error updating menu:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
+router.delete('/outlet/:outletId', checkApiKey, async (req, res) => {
+  /* #swagger.tags = ['Outlets'] */
+  const { outletId } = req.params;
+  console.log(outletId);
+  try {
+    // Find outlet by ID and delete it
+    const deletedOutlet = await Outlet.findByIdAndDelete(outletId);
+    if (!deletedOutlet) {
+      return res.status(404).json({ error: 'Outlet not found' });
+    }
+    res.json({ message: 'Deleted Successfully' });
+  } catch (error) {
+    console.error('Error deleting outlet:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get menu items of an outlet
 router.get('/outlets/menu/:outletId', async (req, res) => {
   // #swagger.tags = ['Outlets']
 
@@ -366,7 +482,7 @@ router.get('/outlets/menu/:outletId', async (req, res) => {
   }
 });
 
-// Middleware function to get outlet by ID
+// Middleware function
 async function getOutlet(req, res, next) {
   try {
     outlet = await Outlet.findById(req.params.id);
@@ -380,6 +496,20 @@ async function getOutlet(req, res, next) {
   res.outlet = outlet;
   next();
 }
+
+
+// Representatives
+router.get('/representatives', async (req, res) => {
+  // #swagger.tags = ['Representatives']
+
+  try {
+    const representatives = await StudentBody.find();
+    res.json(representatives);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 
 module.exports = router;

@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
 
-// Define the location schema
 const locationSchema = new mongoose.Schema({
     latitude: String,
     longitude: String
 });
 
-// Define the menu item schema
 const outletMenuItems = new mongoose.Schema({
     name: String,
     price: Number,
@@ -17,7 +15,6 @@ const outletMenuItems = new mongoose.Schema({
     image: String
 });
 
-// Define the outlet schema
 const outletSchema = new mongoose.Schema({
     name: String,
     location: locationSchema,
