@@ -16,6 +16,7 @@ const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MongoDBAtlas
 //It uses mongoAtlas
 
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
