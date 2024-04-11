@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MongoDBAtlas
 //It uses mongoAtlas
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -35,6 +35,10 @@ app.get('/', (req, res) => {
   res.send(' Go to /api-docs for API Documentation');
 });
 
+app.get('/api-docs', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'api-docs.html'));
+});
+
 // Routes
 app.use('/api', routes);
 
@@ -43,7 +47,7 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 
 module.exports = app;
