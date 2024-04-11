@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "InsIIT API",
-    "description": "<font size='4'>\n    An API developed for the <b>InsIIT app</b>.\n    <br />\n    <br />\n    The InsIIT app is developed for the IIT Gandhinagar community, and is a one-stop shop for all things IITGN.\n    The app is completely open-source, and you can visit the following GitHub repositories and contribute to the project:\n</font>\n<br />\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-api' target='_blank'>\n    <font size='4'>\n        <b>insiit-api</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the API used in the InsIIT app. The API is written in Python using the FastAPI framework.\n</font>\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-ui-react-native'>\n    <font size='4'>\n        <b>insiit-ui-react-native</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the UI of the InsIIT app. The UI is written in Typescript using React Native.\n</font>\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-api-tests' target='_blank'>\n    <font size='4'>\n        <b>insiit-api-tests</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the testing of the API. The tests are written in Python using the pytest and requests modules.\n</font>\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-db' target='_blank'>\n    <font size='4'>\n        <b>insiit-db</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the PostgreSQL database used in the InsIIT app.\n</font>\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-admin'>\n    <font size='4'>\n        <b>insiit-admin</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the admin panel of the InsIIT app. The admin panel is written in Typescript using React.\n</font>\n<br />\n<br />\n<font size='4'>\n    Made with ❤️ by <a href='https://wadc-iitgn.github.io/' target='_blank'><font size='4'>Metis</font></a>, IIT Gandhinagar.\n</font>\n",
+    "description": "<font size='4'>\n    An API developed for the <b>InsIIT app</b>.\n    <br />\n    <br />\n    The InsIIT app is developed for the IIT Gandhinagar community, and is a one-stop shop for all things IITGN.\n    The app is completely open-source, and you can visit the following GitHub repositories and contribute to the project:\n</font>\n<br />\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-api' target='_blank'>\n    <font size='4'>\n        <b>insiit-api</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the API used in the InsIIT app. The API is written in Python using the FastAPI framework.\n</font>\n<br />\n<a href='https://github.com/Metis-IITGandhinagar/insiit-backend-node'>\n    <font size='4'>\n        <b>insiit-api-nodejs</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the API of the InsIIT app. The API is written in Javascript using Express and MongoDB (Currently in Production).\n</font>\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-api-tests' target='_blank'>\n    <font size='4'>\n        <b>insiit-api-tests</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the testing of the API. The tests are written in Python using the pytest and requests modules.\n</font>\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-db' target='_blank'>\n    <font size='4'>\n        <b>insiit-db</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the PostgreSQL database used in the InsIIT app.\n</font>\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-admin'>\n    <font size='4'>\n        <b>insiit-admin</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the admin panel of the InsIIT app. The admin panel is written in Typescript using React.\n</font>\n<br />\n<br />\n<font size='4'>\n    Made with ❤️ by <a href='https://wadc-iitgn.github.io/' target='_blank'><font size='4'>Metis</font></a>, IIT Gandhinagar.\n</font>\n",
     "version": "1.0",
     "x-logo": {
       "url": "https://avatars.githubusercontent.com/u/146699003?s=1000&v=4"
@@ -17,10 +17,11 @@
   "paths": {
     "/mess-menu": {
       "get": {
+        "summary": "Get All Mess Menu Information",
         "tags": [
           "Mess Menu"
         ],
-        "description": "",
+        "description": "Get Every information related to the Mess Menu",
         "responses": {
           "200": {
             "description": "OK"
@@ -34,6 +35,7 @@
         }
       },
       "post": {
+        "summary": "Add Mess Menu",
         "tags": [
           "Mess Menu"
         ],
@@ -66,11 +68,12 @@
       }
     },
     "/mess-menu/{id}": {
+      "summary": "Get Mess Menu by ID",
       "get": {
         "tags": [
           "Mess Menu"
         ],
-        "description": "",
+        "description": "Get Mess Menu by ID",
         "parameters": [
           {
             "name": "id",
@@ -94,10 +97,11 @@
         }
       },
       "put": {
+        "summary": "Update Mess Menu by ID",
         "tags": [
           "Mess Menu"
         ],
-        "description": "",
+        "description": "Update Mess Menu by ID",
         "parameters": [
           {
             "name": "id",
@@ -131,10 +135,11 @@
         }
       },
       "delete": {
+        "summary": "Delete Mess Menu by ID",
         "tags": [
           "Mess Menu"
         ],
-        "description": "",
+        "description": "Delete Mess Menu by ID",
         "parameters": [
           {
             "name": "id",
@@ -169,11 +174,12 @@
       }
     },
     "/buses": {
+      "summary": "Get All Buses Information",
       "get": {
         "tags": [
           "Buses"
         ],
-        "description": "",
+        "description": "Get Every information related to the Buses",
         "responses": {
           "200": {
             "description": "OK"
@@ -184,6 +190,7 @@
         }
       },
       "post": {
+        "summary": "Add Bus",
         "tags": [
           "Buses"
         ],
@@ -211,7 +218,9 @@
       }
     },
     "/buses/{id}": {
+      "summary": "Get Bus by ID",
       "get": {
+        "summary": "Get Bus by ID",
         "tags": [
           "Buses"
         ],
@@ -239,6 +248,7 @@
         }
       },
       "put": {
+        "summary": "Update Bus by ID",
         "tags": [
           "Buses"
         ],
@@ -302,6 +312,7 @@
         }
       },
       "delete": {
+        "summary": "Delete Bus by ID",
         "tags": [
           "Buses"
         ],
@@ -341,6 +352,7 @@
     },
     "/towns": {
       "get": {
+        "summary": "Get All Towns/Stops",
         "tags": [
           "Buses"
         ],
@@ -356,6 +368,7 @@
       }
     },
     "/search": {
+      "summary": "Search Buses by Source and Destination",
       "get": {
         "tags": [
           "Buses"
@@ -391,6 +404,7 @@
       }
     },
     "/events": {
+      "summary": "Get All Events Information",
       "get": {
         "tags": [
           "Events"
@@ -406,6 +420,7 @@
         }
       },
       "post": {
+        "summary": "Add Event",
         "tags": [
           "Events"
         ],
@@ -465,6 +480,7 @@
       }
     },
     "/events/{id}": {
+      "summary": "Get Event by ID",
       "get": {
         "tags": [
           "Events"
@@ -493,6 +509,7 @@
         }
       },
       "delete": {
+        "summary": "Delete Event by ID",
         "tags": [
           "Events"
         ],
@@ -532,6 +549,7 @@
     },
     "/events/{eventid}": {
       "put": {
+        "summary": "Update Event by ID",
         "tags": [
           "Events"
         ],
@@ -602,6 +620,7 @@
       }
     },
     "/outlets": {
+      "summary": "Get All Outlets Information",
       "get": {
         "tags": [
           "Outlets"
@@ -617,6 +636,7 @@
         }
       },
       "post": {
+        "summary": "Add Outlet",
         "tags": [
           "Outlets"
         ],
@@ -679,6 +699,7 @@
       }
     },
     "/outlets/{id}": {
+      "summary": "Get Outlet by ID",
       "get": {
         "tags": [
           "Outlets"
@@ -707,6 +728,7 @@
         }
       },
       "patch": {
+        "summary": "Update Outlet by ID",
         "tags": [
           "Outlets"
         ],
@@ -834,6 +856,7 @@
     },
     "/outlet/{outletId}": {
       "delete": {
+        "summary": "Delete Outlet by ID",
         "tags": [
           "Outlets"
         ],
@@ -873,6 +896,7 @@
     },
     "/outlets/menu/{outletId}": {
       "get": {
+        "summary": "Get Outlet Menu by ID",
         "tags": [
           "Outlets"
         ],
@@ -902,6 +926,7 @@
     },
     "/representatives": {
       "get": {
+        "summary": "Get All Student Representative Information",
         "tags": [
           "Representatives"
         ],
