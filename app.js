@@ -11,8 +11,8 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-// const MONGODB_URI = process.env.MongoDBlocal 
-const MONGODB_URI = process.env.MongoDBAtlas
+const MONGODB_URI = process.env.MongoDBlocal 
+// const MONGODB_URI = process.env.MongoDBAtlas
 //It uses mongoAtlas
 
 app.use(express.static(path.join(__dirname, 'public')));

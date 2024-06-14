@@ -8,6 +8,7 @@ const BusSchedule = require('./busmodel');
 const Event = require('./eventmodel');
 const Outlet = require('./outletmodel');
 const StudentBody = require('./representmodel');
+const fcmStore = require('./fcmModel');
 
 const router = express.Router();
 
@@ -71,7 +72,7 @@ router.get('/mess-menu/:id', async (req, res) => {
 });
 
 
-// Update a Mess Menu item by ID
+// Update a Mess Menu item by ID  
 router.put('/mess-menu/:id', checkApiKey, async (req, res) => {
   // #swagger.tags = ['Mess Menu']
   const { id } = req.params;
@@ -482,6 +483,50 @@ router.get('/outlets/menu/:outletId', async (req, res) => {
   }
 });
 
+router.post('/fcmverify', async (req, res) => {
+  const { name, email, fcmToken } = req.body;
+
+  try {
+    const newFcmToken = new fcmStore({
+      name,
+      email,
+      fcmToken,
+    });
+
+    const savedToken = await newFcmToken.save();
+    res.status(201).json(savedToken);
+  } catch (error) {
+    res.status(500).json({ message: 'Error saving FCM token', error });
+  }
+});
+
+// GET route to fetch all FCM tokens
+router.get('/fcmverify', async (req, res) => {
+  try {
+    const tokens = await fcmStore.find();
+    res.status(200).json(tokens);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching FCM tokens', error });
+  }
+});
+
+// DELETE route to delete an FCM token by ID
+router.delete('/fcmverify/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedToken = await fcmStore.findByIdAndDelete(id);
+
+    if (!deletedToken) {
+      return res.status(404).json({ message: 'FCM token not found' });
+    }
+
+    res.status(200).json({ message: 'FCM token deleted', deletedToken });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting FCM token', error });
+  }
+});
+
 // Middleware function
 async function getOutlet(req, res, next) {
   try {
@@ -509,7 +554,6 @@ router.get('/representatives', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
 
 
 module.exports = router;
