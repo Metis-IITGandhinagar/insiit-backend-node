@@ -9,7 +9,7 @@ const Event = require('./eventmodel');
 const Outlet = require('./outletmodel');
 const StudentBody = require('./representmodel');
 const fcmStore = require('./fcmModel');
-
+const db = require('./firebaseConfig');
 const router = express.Router();
 
 
@@ -542,6 +542,38 @@ async function getOutlet(req, res, next) {
   next();
 }
 
+router.get('/laundry/:laundryCode', async (req, res) => {
+  // #swagger.tags = ['Laundry Services']
+  try {
+    const laundryCode = req.params.laundryCode;
+    if (!laundryCode) {
+      return res.status(400).send('laundryCode path parameter is required');
+    }
+    console.log(`Fetching document with laundryCode: ${laundryCode}`);
+
+    const querySnapshot = await db.collection('laundryDetails')
+                                  .where('laundryCode', '==', laundryCode)
+                                  .get();
+
+    console.log(`Query completed. Found ${querySnapshot.size} documents`);
+
+    if (querySnapshot.empty) {
+      console.log('No matching documents found');
+      return res.status(404).send('No matching documents found');
+    }
+
+    const results = [];
+    querySnapshot.forEach(doc => {
+      console.log(`Document found: ${doc.id} =>`, doc.data());
+      results.push(doc.data());
+    });
+
+    res.status(200).send(results);
+  } catch (error) {
+    console.error('Error getting document:', error);
+    res.status(500).send('Error getting document: ' + error.message);
+  }
+});
 
 // Representatives
 router.get('/representatives', async (req, res) => {

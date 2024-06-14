@@ -8,13 +8,13 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const path = require('path');
 
-const db = require('./firebaseConfig');
+
 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MongoDBlocal 
-// const MONGODB_URI = process.env.MongoDBAtlas
+// const MONGODB_URI = process.env.MongoDBlocal 
+const MONGODB_URI = process.env.MongoDBAtlas
 //It uses mongoAtlas
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -31,38 +31,6 @@ app.use(cors());
 
 app.get('/', (req, res) => {
   res.send(' Go to /api-docs for API Documentation');
-});
-
-app.get('/laundry/:laundryCode', async (req, res) => {
-  try {
-    const laundryCode = req.params.laundryCode;
-    if (!laundryCode) {
-      return res.status(400).send('laundryCode path parameter is required');
-    }
-    console.log(`Fetching document with laundryCode: ${laundryCode}`);
-
-    const querySnapshot = await db.collection('laundryDetails')
-                                  .where('laundryCode', '==', laundryCode)
-                                  .get();
-
-    console.log(`Query completed. Found ${querySnapshot.size} documents`);
-
-    if (querySnapshot.empty) {
-      console.log('No matching documents found');
-      return res.status(404).send('No matching documents found');
-    }
-
-    const results = [];
-    querySnapshot.forEach(doc => {
-      console.log(`Document found: ${doc.id} =>`, doc.data());
-      results.push(doc.data());
-    });
-
-    res.status(200).send(results);
-  } catch (error) {
-    console.error('Error getting document:', error);
-    res.status(500).send('Error getting document: ' + error.message);
-  }
 });
 
 app.get('/api-docs', (req, res) => {

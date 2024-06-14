@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "InsIIT API",
-    "description": "<font size='4'>\n    An API developed for the <b>InsIIT app</b>.\n    <br />\n    <br />\n    The InsIIT app is developed for the IIT Gandhinagar community, and is a one-stop shop for all things IITGN.\n    The app is completely open-source, and you can visit the following GitHub repositories and contribute to the project:\n</font>\n<br />\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-api' target='_blank'>\n    <font size='4'>\n        <b>insiit-api</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the API used in the InsIIT app. The API is written in Python using the FastAPI framework.\n</font>\n<br />\n<a href='https://github.com/Metis-IITGandhinagar/insiit-backend-node'>\n    <font size='4'>\n        <b>insiit-api-nodejs</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the API of the InsIIT app. The API is written in Javascript using Express and MongoDB (Currently in Production).\n</font>\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-api-tests' target='_blank'>\n    <font size='4'>\n        <b>insiit-api-tests</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the testing of the API. The tests are written in Python using the pytest and requests modules.\n</font>\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-db' target='_blank'>\n    <font size='4'>\n        <b>insiit-db</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the PostgreSQL database used in the InsIIT app.\n</font>\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-admin'>\n    <font size='4'>\n        <b>insiit-admin</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the admin panel of the InsIIT app. The admin panel is written in Typescript using React.\n</font>\n<br />\n<br />\n<font size='4'>\n    Made with ❤️ by <a href='https://wadc-iitgn.github.io/' target='_blank'><font size='4'>Metis</font></a>, IIT Gandhinagar.\n</font>\n",
+    "description": "<font size='4'>\n    An API developed for the <b>InsIIT app</b>.\n    <br />\n    <br />\n    The InsIIT app is developed for the IIT Gandhinagar community, and is a one-stop shop for all things IITGN.\n    The app is completely open-source, and you can visit the following GitHub repositories and contribute to the project:\n</font>\n<br /><br />\n<a href='https://github.com/Metis-IITGandhinagar/insiit-backend-node'>\n    <font size='4'>\n        <b>insiit-api-nodejs</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the API of the InsIIT app. The API is written in Javascript using Express and MongoDB <b>(Currently in Production)</b>.\n</font>\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-api-tests' target='_blank'>\n    <font size='4'>\n        <b>insiit-api-tests</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the testing of the API. The tests are written in Python using the pytest and requests modules.\n</font>\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-db' target='_blank'>\n    <font size='4'>\n        <b>insiit-db</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the PostgreSQL database used in the InsIIT app.\n</font>\n<br />\n<a href='https://github.com/WADC-IITGN/insiit-admin'>\n    <font size='4'>\n        <b>insiit-admin</b>\n    </font>\n</a>\n<font size='4'>: This repository maintains the code for the admin panel of the InsIIT app. The admin panel is written in Typescript using React.\n</font>\n<br />\n<br />\n<font size='4'>\n    Made with ❤️ by <a href='https://wadc-iitgn.github.io/' target='_blank'><font size='4'>Metis</font></a>, IIT Gandhinagar.\n</font>\n",
     "version": "1.0",
     "x-logo": {
       "url": "https://avatars.githubusercontent.com/u/146699003?s=1000&v=4"
@@ -807,6 +807,9 @@
     "/api/outlets/{outletId}": {
       "patch": {
         "description": "",
+        "tags": [
+          "Outlets"
+        ],
         "parameters": [
           {
             "name": "outletId",
@@ -917,6 +920,33 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/laundry/{laundryCode}": {
+      "get": {
+        "summary": "Get Laundary Information by ID", 
+        "tags": [
+          "Laundry Services"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "laundryCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "500": {
             "description": "Internal Server Error"
