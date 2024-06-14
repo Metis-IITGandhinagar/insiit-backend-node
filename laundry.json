@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "laundry-app-ea776",
+  "private_key_id": "4e2e65975920e23055133aec713017c2bc30b4c2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQCvyhLvPWbNV9N8\nnr+jTgL/4p9KkxwBZPxRlnFFfrUL9fG8rURsyj0beQaaxnLi0Gr985abzAqMpt5w\n26zUhXEG7NRyvtiMst72EqBxK5+kF11lJbP5VXfVWGj2hPQ59ah2iFsnc651VMGh\ne0NuZbp9kBk7a478LewKmBRSoRX+BBMRApVYO7nQ/6piKtUlNeBlyf7Zet72vRSZ\nQyGeBD/vc133oDeGtqInYOPSeWUwCqMlRJLGv3k/lefD2FGf4xR3HshKjE9HSC7n\nH0iLfLgHaHYNJTI2D9cCky1QRmZEP30i+5hr4FApnetRz4J1BS0N+hH0OrAp23ow\nyPG7kE9TAgMBAAECgf8tULwucXlZjziJ54xtbYTS91eRC0cMrW0F47LEPJvy/kR/\nni5Od0Zn4r7rk1oLf/Tc/ekEafUAkhqp4QWUcSAJV0jeMj+i3dYHrdLKdeG0zG8J\ndWdaF2EjruYP/EUKSPRZZRSFeo9zlSVVwYocJzOtNPt9pBOnAOVUgT1660AD+Lx0\ni2g30c8W9Q1SQYPl38LTrUmNIHucgopBWUejO/3nhZpnbAvlWDkmutNbsnlLGCP4\nh0g0Pzkygcqfl4+SvPf8hzMyg1q99J6J9ixAXqbAIdk76wkpzP3Xr5M8SqaXX7Lx\ntRuDkiPaGtzqdCOygLjq3zVmqLuFXvB/VpNsmJkCgYEA6GdANvwZPXFgcI635jwr\n846O4Iom9EbKULmzgbTS6Qjw4X1PdtMj+LcKY94YzaTaq7rboqzU0Ke3qmCmW+ol\nKjPNGsNqzt5ayrDkk1b0VAhIDJtMIU7Qu4zcwy0uOnhhCvoDF5z0XD/UFa9g6sfy\nuO4COPVnVoiJtZGM9HIhQ10CgYEAwaNIdbXYY5OGaENlUIoj+pjrv9YM53vG/gxC\nNtnVpnuR3WVvjABasmljrI0C2CqymBwoYciHVPZhYdw6gvW+W8IGFzwo1joOEwuJ\nVwIQh8SO1A6VOAQJkQt4p2thb7Rtw9Go4Tm1nij60MtX0VkXc3QRi5dDaC/P2MyV\n5Nmc4m8CgYEAneU4faL9yv7ylMaCLwyGl+0tKWTzXleSMRJZ4S/nc6g9cBXhHUwK\nTnqdtog4tc7hOnezrWxbEoBAiqMro5sLMQcMvLg0IuRzLu7L/UbArS8LNHV2XdLc\ngfAMNRbHJ7aNyBVgcHSUmPBMuYb0A89hGz+phuVEFkihtxhyecnoy4kCgYBb45xz\nH4Q8XLmfqLvfaG6CcScOtgkRoI9h53dUiDL2+hTSN1yj11cy6wg9zfzXkAuIW3Re\nUsbF7tVvlw69LtjSulQhmo7Wel5Lc2INRBGMHB6bSwBMwL25cvQinrZyR/D+x/OY\nTcZ983xysMxPsDOMujvJPlLiki3T9+H547qrSQKBgC8NGW62SElaa0BsLvUAW+PE\ntFiAW+cH6f/5qWldvGprbwTjdOfIEEttBmQeK8nMFUEju+Qi1nNNOfGlVnTvqknU\nHA2U2sZiL8zyvL9cj220dAI1lDFb5K3/NQE8NdxNDMIkwwTx/xoIw+TsmK5EniNH\nFHoK6jlGM/TFkVMQEl0b\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-ravvy@laundry-app-ea776.iam.gserviceaccount.com",
+  "client_id": "110085582507958144053",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ravvy%40laundry-app-ea776.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
