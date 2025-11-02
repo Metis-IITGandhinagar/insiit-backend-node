@@ -587,5 +587,89 @@ router.get('/representatives', async (req, res) => {
   }
 });
 
+//Lost and found 
+router.post('/lostfound', async (req, res) => {
+  // #swagger.tags = ['Lost & Found']
+  
+  try {
+    const newItem = new LostFoundItem({
+      title: req.body.title,
+      description: req.body.description,
+      image_urls: req.body.image_urls || [],
+      lost_date: req.body.lost_date,
+      lost_location: req.body.lost_location,
+      uploader_email: req.body.uploader_email,
+      uploader_contact: req.body.uploader_contact,
+    });
+    
+    const savedItem = await newItem.save();
+    res.status(201).json(savedItem);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// GET all *lost*  items
+router.get('/lostfound', async (req, res) => {
+  // #swagger.tags = ['Lost & Found']
+  try {
+    const items = await LostFoundItem.find({ status: 'lost' }).sort({ date_posted: -1 });
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// GET all claimed items
+router.get('/lostfound/resolved', async (req, res) => {
+  // #swagger.tags = ['Lost & Found']
+  try {
+    const items = await LostFoundItem.find({ status: 'found' }).sort({ date_posted: -1 });
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// PUT to mark an item as found
+router.put('/lostfound/:id/resolve', async (req, res) => {
+  // #swagger.tags = ['Lost & Found']
+  try {
+    const { finder_email } = req.body; 
+
+    if (!finder_email) {
+      return res.status(400).json({ message: 'Finder email is required to resolve an item' });
+    }
+
+    const item = await LostFoundItem.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+    
+    item.status = 'found';
+    item.finder_email = finder_email;
+    item.found_date = Date.now(); 
+
+    const updatedItem = await item.save();
+    res.json(updatedItem);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// delete an item
+router.delete('/lostfound/:id', async (req, res) => {
+  // #swagger.tags = ['Lost & Found']
+  try {
+    const deletedItem = await LostFoundItem.findByIdAndDelete(req.params.id);
+    if (!deletedItem) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+    res.json({ message: 'Item deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 module.exports = router;
