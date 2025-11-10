@@ -11,6 +11,7 @@ const StudentBody = require('./representmodel');
 const fcmStore = require('./fcmModel');
 const db = require('./firebaseConfig');
 const router = express.Router();
+const LostFoundItem = require('./lostfoundmodel');
 
 
 const checkApiKey = (req, res, next) => {
