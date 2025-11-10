@@ -591,18 +591,33 @@ router.get('/representatives', async (req, res) => {
 //Lost and found 
 router.post('/lostfound', async (req, res) => {
   // #swagger.tags = ['Lost & Found']
-  
   try {
+    const {
+      title,
+      description,
+      image_urls = [],
+      lost_date,
+      lost_location,
+      uploader_email,
+      uploader_contact,
+    } = req.body;
+
+    if (!title || !lost_date || !lost_location || !uploader_email) {
+      return res.status(400).json({
+        message: 'title, lost_date, lost_location, uploader_email are required',
+      });
+    }
+
     const newItem = new LostFoundItem({
-      title: req.body.title,
-      description: req.body.description,
-      image_urls: req.body.image_urls || [],
-      lost_date: req.body.lost_date,
-      lost_location: req.body.lost_location,
-      uploader_email: req.body.uploader_email,
-      uploader_contact: req.body.uploader_contact,
+      title,
+      description,
+      image_urls,
+      lost_date,
+      lost_location,
+      uploader_email,
+      uploader_contact,
     });
-    
+
     const savedItem = await newItem.save();
     res.status(201).json(savedItem);
   } catch (error) {
@@ -637,19 +652,22 @@ router.put('/lostfound/:id/resolve', async (req, res) => {
   // #swagger.tags = ['Lost & Found']
   try {
     const { finder_email } = req.body; 
-
     if (!finder_email) {
-      return res.status(400).json({ message: 'Finder email is required to resolve an item' });
+      return res.status(400).json({ message: 'finder_email is required to resolve an item' });
     }
 
     const item = await LostFoundItem.findById(req.params.id);
     if (!item) {
       return res.status(404).json({ message: 'Item not found' });
     }
-    
+
+    if (item.status === 'found') {
+      return res.status(409).json({ message: 'Item already marked as found' });
+    }
+
     item.status = 'found';
     item.finder_email = finder_email;
-    item.found_date = Date.now(); 
+    item.found_date = new Date();
 
     const updatedItem = await item.save();
     res.json(updatedItem);
@@ -658,19 +676,30 @@ router.put('/lostfound/:id/resolve', async (req, res) => {
   }
 });
 
+
 // delete an item
 router.delete('/lostfound/:id', async (req, res) => {
   // #swagger.tags = ['Lost & Found']
   try {
-    const deletedItem = await LostFoundItem.findByIdAndDelete(req.params.id);
-    if (!deletedItem) {
+    const { uploader_email } = req.body || {};
+    if (!uploader_email) {
+      return res.status(400).json({ message: 'uploader_email is required to delete' });
+    }
+
+    const item = await LostFoundItem.findById(req.params.id);
+    if (!item) {
       return res.status(404).json({ message: 'Item not found' });
     }
+
+    if (item.uploader_email !== uploader_email) {
+      return res.status(403).json({ message: 'Not allowed: can only delete your own post' });
+    }
+
+    await item.deleteOne();
     res.json({ message: 'Item deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
-
 
 module.exports = router;
