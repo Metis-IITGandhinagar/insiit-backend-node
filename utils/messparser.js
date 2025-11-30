@@ -68,8 +68,8 @@ async function parseMessExcel(fileUrl) {
 
   const days = [2, 3, 4, 5, 6, 7, 8];
 
-  const BREAKFAST = { start: 3, end: 12 };
-  const LUNCH = { start: 15, end: 24 };
+  const BREAKFAST = { start: 4, end: 13 };
+  const LUNCH = { start: 16, end: 24 };
   const SNACKS = { start: 27, end: 30 };
   const DINNER = { start: 33, end: 40 };
 
