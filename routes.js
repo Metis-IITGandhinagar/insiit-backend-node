@@ -11,7 +11,7 @@ const StudentBody = require('./representmodel');
 const fcmStore = require('./fcmModel');
 const db = require('./firebaseConfig');
 const router = express.Router();
-
+const LostFoundItem = require('./lostfoundmodel');
 
 const checkApiKey = (req, res, next) => {
   const apiKey = req.headers['x-api-key'];
@@ -588,20 +588,35 @@ router.get('/representatives', async (req, res) => {
 });
 
 //Lost and found 
+//Lost and found 
 router.post('/lostfound', async (req, res) => {
   // #swagger.tags = ['Lost & Found']
-  
   try {
+    const {
+      title,
+      description,
+      image_urls = [],
+      lost_date,
+      lost_location,
+      uploader_email,
+      uploader_contact,
+    } = req.body;
+
+    if (!title || !lost_date || !lost_location || !uploader_email) {
+      return res.status(400).json({
+        message: 'title, lost_date, lost_location, uploader_email are required',
+      });
+    }
+
     const newItem = new LostFoundItem({
-      title: req.body.title,
-      description: req.body.description,
-      image_urls: req.body.image_urls || [],
-      lost_date: req.body.lost_date,
-      lost_location: req.body.lost_location,
-      uploader_email: req.body.uploader_email,
-      uploader_contact: req.body.uploader_contact,
+      title,
+      description,
+      image_urls,
+      lost_date,
+      lost_location,
+      uploader_email,
+      uploader_contact,
     });
-    
     const savedItem = await newItem.save();
     res.status(201).json(savedItem);
   } catch (error) {
@@ -636,19 +651,22 @@ router.put('/lostfound/:id/resolve', async (req, res) => {
   // #swagger.tags = ['Lost & Found']
   try {
     const { finder_email } = req.body; 
-
     if (!finder_email) {
-      return res.status(400).json({ message: 'Finder email is required to resolve an item' });
+      return res.status(400).json({ message: 'finder_email is required to resolve an item' });
     }
 
     const item = await LostFoundItem.findById(req.params.id);
     if (!item) {
       return res.status(404).json({ message: 'Item not found' });
     }
-    
+
+    if (item.status === 'found') {
+      return res.status(409).json({ message: 'Item already marked as found' });
+    }
+
     item.status = 'found';
     item.finder_email = finder_email;
-    item.found_date = Date.now(); 
+    item.found_date = new Date();
 
     const updatedItem = await item.save();
     res.json(updatedItem);
@@ -657,17 +675,69 @@ router.put('/lostfound/:id/resolve', async (req, res) => {
   }
 });
 
+
 // delete an item
 router.delete('/lostfound/:id', async (req, res) => {
   // #swagger.tags = ['Lost & Found']
   try {
-    const deletedItem = await LostFoundItem.findByIdAndDelete(req.params.id);
-    if (!deletedItem) {
+    const { uploader_email } = req.body || {};
+    if (!uploader_email) {
+      return res.status(400).json({ message: 'uploader_email is required to delete' });
+    }
+
+    const item = await LostFoundItem.findById(req.params.id);
+    if (!item) {
       return res.status(404).json({ message: 'Item not found' });
     }
+
+ if (item.uploader_email !== uploader_email) {
+      return res.status(403).json({ message: 'Not allowed: can only delete your own post' });
+    }
+
+    await item.deleteOne();
     res.json({ message: 'Item deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+const { parseMessExcel } = require("./utils/messparser");
+
+router.post("/mess-menu/parse", checkApiKey, async (req, res) => {
+  try {
+    const { fileUrl } = req.body;
+    if (!fileUrl) return res.status(400).json({ error: "fileUrl is required" });
+
+    const json = await parseMessExcel(fileUrl);
+    return res.json(json);
+
+  } catch (err) {
+    console.error("Parse error:", err);
+    return res.status(500).json({ error: "Failed to parse Excel" });
+  }
+});
+
+router.post("/mess-menu/update-from-excel", checkApiKey, async (req, res) => {
+  try {
+    const { fileUrl } = req.body;
+
+    if (!fileUrl) {
+      return res.status(400).json({ error: "fileUrl is required" });
+    }
+
+    const parsed = await parseMessExcel(fileUrl);
+
+    await MessMenu.deleteMany({});
+
+    const saved = await MessMenu.create(parsed);
+
+    return res.status(201).json({
+      message: "Mess menu updated successfully",
+      savedMenu: saved,
+    });
+  } catch (err) {
+    console.error("Update-from-excel error:", err);
+    return res.status(500).json({ error: "Failed to update mess menu" });
   }
 });
 
