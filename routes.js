@@ -703,20 +703,6 @@ router.delete('/lostfound/:id', async (req, res) => {
 
 const { parseMessExcel } = require("./utils/messparser");
 
-router.post("/mess-menu/parse", checkApiKey, async (req, res) => {
-  try {
-    const { fileUrl } = req.body;
-    if (!fileUrl) return res.status(400).json({ error: "fileUrl is required" });
-
-    const json = await parseMessExcel(fileUrl);
-    return res.json(json);
-
-  } catch (err) {
-    console.error("Parse error:", err);
-    return res.status(500).json({ error: "Failed to parse Excel" });
-  }
-});
-
 router.post("/mess-menu/update-from-excel", checkApiKey, async (req, res) => {
   try {
     const { fileUrl } = req.body;
