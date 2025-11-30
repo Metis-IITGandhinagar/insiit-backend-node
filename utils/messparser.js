@@ -6,11 +6,28 @@ const os = require("os");
 
 // Download Excel to temp folder
 async function downloadExcel(fileUrl) {
-  const dest = path.join(os.tmpdir(), `mess_${Date.now()}.xlsx`);
+	const dest = path.join(
+	  process.env.MESS_MENU_FILE_DIR || os.tmpdir(),
+	  `mess_${Date.now()}.xlsx`
+	);
 
-  if (fileUrl.startsWith("http")) {
+  // Check if the fileUrl is a Google Sheets URL
+  const googleSheetsRegex = /https:\/\/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/;
+
+  if (googleSheetsRegex.test(fileUrl)) {
+    // Extract the spreadsheet ID from the URL
+    const spreadsheetId = fileUrl.match(googleSheetsRegex)[1];
+    
+    // Build the export URL for XLSX format
+    const exportUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=xlsx`;
+
+    // Download the file using the export URL
     const writer = fs.createWriteStream(dest);
-    const response = await axios({ url: fileUrl, method: "GET", responseType: "stream" });
+    const response = await axios({
+      url: exportUrl,
+      method: "GET",
+      responseType: "stream",
+    });
 
     response.data.pipe(writer);
 
