@@ -13,7 +13,7 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-// const MONGODB_URI = process.env.MongoDBlocal 
+// const MONGODB_URI = process.env.MongoDBlocal
 const MONGODB_URI = process.env.MongoDBAtlas
 //It uses mongoAtlas
 
@@ -25,7 +25,7 @@ mongoose.connect(MONGODB_URI)
   .catch(err => console.error('Error connecting to MongoDB:', err));
 
 // Middleware
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 // app.set('view engine', 'ejs');
 
@@ -41,7 +41,7 @@ app.get('/api-docs', (req, res) => {
 app.use('/api', routes);
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 

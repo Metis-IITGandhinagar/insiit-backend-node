@@ -42,7 +42,7 @@ router.get('/mess-menu', async (req, res) => {
 // Create a new Mess Menu item
 router.post('/mess-menu', checkApiKey, async (req, res) => {
 
-  /*#swagger.tags = ['Mess Menu'] 
+  /*#swagger.tags = ['Mess Menu']
   #swagger.security = [{
            "apiKeyAuth": []
    }] */
@@ -72,7 +72,7 @@ router.get('/mess-menu/:id', async (req, res) => {
 });
 
 
-// Update a Mess Menu item by ID  
+// Update a Mess Menu item by ID
 router.put('/mess-menu/:id', checkApiKey, async (req, res) => {
   // #swagger.tags = ['Mess Menu']
   const { id } = req.params;
@@ -160,10 +160,12 @@ router.post('/buses', checkApiKey, async (req, res) => {
 router.get('/towns', async (req, res) => {
   // #swagger.tags = ['Buses']
 
+  console.log("Hi there")
   try {
     const sources = await BusSchedule.distinct('Source');
     const destinations = await BusSchedule.distinct('Destination');
     const names = [...new Set([...sources, ...destinations])].map(name => ({ name }));
+    console.log(names)
     res.json(names);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -267,12 +269,41 @@ router.get('/events/:id', async (req, res) => {
 router.post('/events', checkApiKey, async (req, res) => {
   // #swagger.tags = ['Events']
 
+  var poster_image_url;
+  if (req.params["image_bytes"] == true) {
+    console.log("image bytes is true");
+    try {
+      console.log("image bytes are sent with this request");
+      const base64Image = req.body.base64Image;
+
+      const matches = base64Image.match(/^data:image\/([A-Za-z-+\/]+);base64,(.+)$/);
+
+      if (!matches || matches.length !== 3) {
+        return res.status(400).json({ error: 'Invalid base64 string format' });
+      }
+
+      const imageExtension = matches[1]; // e.g., 'png' or 'jpeg'
+      const base64Data = matches[2];     // The actual raw base64 string
+
+      const imageBuffer = Buffer.from(base64Data, 'base64');
+
+      const filename = `image-${Date.now()}.${imageExtension}`;
+      const targetPath = path.join(__dirname, 'public', 'images', filename);
+
+      fs.writeFileSync(targetPath, imageBuffer);
+
+    } catch (e) {
+      res.status(500).json({ error: 'Internal server error while saving image' });
+    }
+  } else {
+    poster_image_url = req.body.poster_image_url;
+  }
   const event = new Event({
     event_name: req.body.event_name,
     location: req.body.location,
     date: req.body.date,
     start_time: req.body.start_time,
-    poster_image_url: req.body.poster_image_url,
+    poster_image_url: poster_image_url,
     description: req.body.description,
     added_by: req.body.added_by
   });
@@ -552,8 +583,8 @@ router.get('/laundry/:laundryCode', async (req, res) => {
     console.log(`Fetching document with laundryCode: ${laundryCode}`);
 
     const querySnapshot = await db.collection('laundryDetails')
-                                  .where('laundryCode', '==', laundryCode)
-                                  .get();
+      .where('laundryCode', '==', laundryCode)
+      .get();
 
     console.log(`Query completed. Found ${querySnapshot.size} documents`);
 
@@ -587,8 +618,8 @@ router.get('/representatives', async (req, res) => {
   }
 });
 
-//Lost and found 
-//Lost and found 
+//Lost and found
+//Lost and found
 router.post('/lostfound', async (req, res) => {
   // #swagger.tags = ['Lost & Found']
   try {
@@ -650,7 +681,7 @@ router.get('/lostfound/resolved', async (req, res) => {
 router.put('/lostfound/:id/resolve', async (req, res) => {
   // #swagger.tags = ['Lost & Found']
   try {
-    const { finder_email } = req.body; 
+    const { finder_email } = req.body;
     if (!finder_email) {
       return res.status(400).json({ message: 'finder_email is required to resolve an item' });
     }
@@ -690,7 +721,7 @@ router.delete('/lostfound/:id', async (req, res) => {
       return res.status(404).json({ message: 'Item not found' });
     }
 
- if (item.uploader_email !== uploader_email) {
+    if (item.uploader_email !== uploader_email) {
       return res.status(403).json({ message: 'Not allowed: can only delete your own post' });
     }
 
