@@ -8,6 +8,7 @@ const BusSchedule = require('./busmodel');
 const Event = require('./eventmodel');
 const Outlet = require('./outletmodel');
 const StudentBody = require('./representmodel');
+const Admin = require('./adminModel')
 const fcmStore = require('./fcmModel');
 const db = require('./firebaseConfig');
 const router = express.Router();
@@ -757,6 +758,19 @@ router.post("/mess-menu/update-from-excel", checkApiKey, async (req, res) => {
     return res.status(500).json({ error: "Failed to update mess menu" });
   }
 });
+
+
+router.get("/admin", checkApiKey, async (req, res) => {
+  const adminId = req.body.admin_id
+  try {
+    const admin = await Admin.findById(adminId)
+    res.status(201).json(admin)
+    return admin;
+  } catch (error) {
+    console.log("error fetching admin:", error)
+    res.status(400).write("Couldn't find admin")
+  }
+})
 
 
 module.exports = router;
