@@ -783,6 +783,7 @@ router.post("/admin", checkApiKey, async (req, res) => {
     } = req.body
     if (!adminEmail || !adminRoutes) {
       res.status(400).send("Bad request")
+      return
     }
     console.log(adminRoutes)
   } catch (e) {
