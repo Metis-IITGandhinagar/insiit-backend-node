@@ -789,6 +789,7 @@ router.post("/admin", checkApiKey, async (req, res) => {
   } catch (e) {
     console.log("couldn't parse adminRoutes", e)
     res.status(400).write("Bad reqeust")
+    return
   }
 
   for (const route of adminRoutes) {
