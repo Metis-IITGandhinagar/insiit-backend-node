@@ -768,7 +768,7 @@ router.get("/admin", async (req, res) => {
   const admin = await Admin.findById(adminId)
   if (!admin) {
     console.log("error fetching admin:", error)
-    res.status(400).write("Couldn't find admin")
+    res.status(400).send("Couldn't find admin")
   } else {
     console.log("Found admin:", admin)
     res.status(201).json(admin)
@@ -782,27 +782,27 @@ router.post("/admin", checkApiKey, async (req, res) => {
       adminEmail, adminRoutes
     } = req.body
     if (!adminEmail || !adminRoutes) {
-      res.status(400).write("Bad request")
+      res.status(400).send("Bad request")
     }
     console.log(adminRoutes)
   } catch (e) {
-    res.status(400).write("Bad reqeust")
+    res.status(400).send("Bad reqeust")
     return
   }
 
   for (const route of adminRoutes) {
     if (!availableAdminRoutes.contains(route)) {
       console.log(route, "not available")
-      res.status(400).write("Bad request")
+      res.status(400).send("Bad request")
     }
   }
 
   const admin = new Admin({ adminEmail, adminRoutes })
   try {
     await admin.save()
-    res.status(200).write("Successfully create an admin");
+    res.status(200).send("Successfully create an admin");
   } catch (e) {
-    res.status(500).write("Couldn't create admin", e)
+    res.status(500).send("Couldn't create admin", e)
   }
 })
 
