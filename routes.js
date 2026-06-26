@@ -23,6 +23,26 @@ const checkApiKey = (req, res, next) => {
 };
 
 
+async function verifyAdmin(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  if (!uid || uid.split(" ").length != 2) {
+    const uid = uid.split(" ")[1];
+    try {
+      const user = auth.getUser(uid);
+      if (user == null) {
+        console.log(e);
+        res.status(400).json({ "message": "Invalid authorization" })
+        return
+      }
+      next();
+    } catch (e) {
+      console.log(e);
+      res.status(400).json({ "message": "Invalid authorization" })
+      return
+    }
+  }
+}
+
 // Get all Mess Menu items
 router.get('/mess-menu', async (req, res) => {
   // #swagger.tags = ['Mess Menu']
@@ -267,8 +287,23 @@ router.get('/events/:id', async (req, res) => {
 });
 
 // New Event
-router.post('/events', checkApiKey, async (req, res) => {
+router.post('/events', verifyAdmin, async (req, res) => {
   // #swagger.tags = ['Events']
+  try {
+    const uid = req.headers["authorization"].split(" ")[1]
+    const user = await auth.getUser(uid);
+    const admin = await Admin.findOne({ email: user.email })
+    if (!admin) {
+      res.status(400).json({ "message": "You are not authorized for this operation" })
+      return
+    } else if (!admin.adminRoutes.includes("createEvent")) {
+      res.status(400).json({ "message": "You are not authorized for this operation" })
+      return
+    }
+  } catch (e) {
+    res.status(500).json({ "message": "Internal server error" })
+    return
+  }
 
   var poster_image_url;
   if (req.params["image_bytes"] == "true") {
