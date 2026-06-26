@@ -790,6 +790,7 @@ router.post("/admin", checkApiKey, async (req, res) => {
     if (!availableAdminRoutes.includes(route)) {
       console.log(route, "not available")
       res.status(400).send("Bad request")
+      return
     }
   }
 
