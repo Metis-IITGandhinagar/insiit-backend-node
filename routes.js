@@ -784,7 +784,7 @@ router.post("/admin", checkApiKey, async (req, res) => {
     if (!adminEmail || !adminRoutes) {
       res.status(400).write("Bad request")
     }
-
+    console.log(adminRoutes)
     adminRoutes = JSON.parse(adminRoutes)
   } catch (e) {
     console.log("couldn't parse adminRoutes", e)
