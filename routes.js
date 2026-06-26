@@ -10,7 +10,7 @@ const Outlet = require('./outletmodel');
 const StudentBody = require('./representmodel');
 const Admin = require('./adminModel')
 const fcmStore = require('./fcmModel');
-const db = require('./firebaseConfig');
+const { db, auth } = require('./firebaseConfig');
 const router = express.Router();
 const LostFoundItem = require('./lostfoundmodel');
 
@@ -764,10 +764,14 @@ const availableAdminRoutes = ["createEvent", "updateMessMenu"];
 
 router.get("/admin", async (req, res) => {
   console.log("asking admin");
-  const adminId = req.body.admin_id
-  const admin = await Admin.findById(adminId)
+  const adminUid = req.body.admin_id
+  const adminAccount = await auth.getUser(adminUid)
+  if (!adminAccount || !adminAccount.email) {
+    console.log(adminAccount, "Admin account not found.")
+  }
+  const admin = await Admin.find({ email: adminAccount.email })
   if (!admin) {
-    console.log("error fetching admin:", error)
+    console.log("Admin not found")
     res.status(400).send({ "message": "Couldn't find admin" })
   } else {
     console.log("Found admin:", admin)
