@@ -764,18 +764,26 @@ const availableAdminRoutes = ["createEvent", "updateMessMenu"];
 
 router.get("/admin", async (req, res) => {
   console.log("asking admin");
-  const adminUid = req.body.admin_id
-  const adminAccount = await auth.getUser(adminUid)
-  if (!adminAccount || !adminAccount.email) {
-    console.log(adminAccount, "Admin account not found.")
-  }
-  const admin = await Admin.find({ email: adminAccount.email })
-  if (!admin) {
-    console.log("Admin not found")
-    res.status(400).send({ "message": "Couldn't find admin" })
-  } else {
-    console.log("Found admin:", admin)
-    res.status(201).json(admin)
+
+  try {
+    const adminUid = req.headers["Authorization"].split()[1]
+    const adminAccount = await auth.getUser(adminUid)
+    if (!adminAccount || !adminAccount.email) {
+      console.log(adminAccount, "Admin account not found.")
+      res.status(400).json({ "message": "Couldn't find admin" })
+      return
+    }
+    const admin = await Admin.find({ email: adminAccount.email })
+    if (!admin) {
+      console.log("Admin not found")
+      res.status(400).send({ "message": "Couldn't find admin" })
+    } else {
+      console.log("Found admin:", admin)
+      res.status(201).json(admin)
+    }
+  } catch {
+    res.status(400).json({ "message": "Couldn't find admin" })
+    return
   }
 })
 
