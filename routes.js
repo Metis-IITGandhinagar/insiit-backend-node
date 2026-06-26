@@ -799,7 +799,8 @@ router.post("/admin", checkApiKey, async (req, res) => {
     await admin.save()
     res.status(200).send("Successfully create an admin");
   } catch (e) {
-    res.status(500).send("Couldn't create admin", e)
+    console.log("Couldn't create admin", e)
+    res.status(500).json({ "message": "Couldn't create admin" })
     return
   }
 })
