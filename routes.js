@@ -766,7 +766,7 @@ router.get("/admin", async (req, res) => {
   console.log("asking admin");
 
   try {
-    const adminUid = req.headers["Authorization"].split()[1]
+    const adminUid = req.headers["Authorization"].split(" ")[1]
     const adminAccount = await auth.getUser(adminUid)
     if (!adminAccount || !adminAccount.email) {
       console.log(adminAccount, "Admin account not found.")
