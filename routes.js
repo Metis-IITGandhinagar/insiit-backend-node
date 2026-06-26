@@ -781,20 +781,20 @@ router.post("/admin", checkApiKey, async (req, res) => {
     adminEmail, adminRoutes
   } = req.body
   if (!adminEmail || !adminRoutes) {
-    res.status(400).text("Bad request")
+    res.status(400).write("Bad request")
   }
 
   try {
     adminRoutes = JSON.parse(adminRoutes)
   } catch (e) {
     console.log("couldn't parse adminRoutes", adminRoutes, e)
-    res.status(400).text("Bad reqeust")
+    res.status(400).write("Bad reqeust")
   }
 
   for (const route of adminRoutes) {
     if (!availableAdminRoutes.contains(route)) {
       console.log(route, "not available")
-      res.status(400).text("Bad request")
+      res.status(400).write("Bad request")
     }
   }
 
