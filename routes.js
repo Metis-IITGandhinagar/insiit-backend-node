@@ -271,7 +271,7 @@ router.post('/events', checkApiKey, async (req, res) => {
   // #swagger.tags = ['Events']
 
   var poster_image_url;
-  if (req.params["image_bytes"] == true) {
+  if (req.params["image_bytes"] == "true") {
     console.log("image bytes is true");
     try {
       console.log("image bytes are sent with this request");
@@ -761,6 +761,7 @@ router.post("/mess-menu/update-from-excel", checkApiKey, async (req, res) => {
 
 
 router.get("/admin", checkApiKey, async (req, res) => {
+  console.log("asking admin");
   const adminId = req.body.admin_id
   try {
     const admin = await Admin.findById(adminId)
