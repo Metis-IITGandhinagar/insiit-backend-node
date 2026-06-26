@@ -781,7 +781,8 @@ router.get("/admin", async (req, res) => {
       console.log("Found admin:", admin)
       res.status(201).json(admin)
     }
-  } catch {
+  } catch (e) {
+    console.log("Error: ", e)
     res.status(400).json({ "message": "Couldn't find admin" })
     return
   }
