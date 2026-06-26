@@ -794,7 +794,7 @@ router.post("/admin", checkApiKey, async (req, res) => {
     }
   }
 
-  const admin = new Admin({ adminEmail, adminRoutes })
+  const admin = new Admin({ email: adminEmail, adminRoutes })
   try {
     await admin.save()
     res.status(200).json({ "message": "Successfully create an admin" });
