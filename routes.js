@@ -777,19 +777,14 @@ router.get("/admin", async (req, res) => {
 
 
 router.post("/admin", checkApiKey, async (req, res) => {
-  try {
-    const {
-      adminEmail, adminRoutes
-    } = req.body
-    if (!adminEmail || !adminRoutes) {
-      res.status(400).send("Bad request")
-      return
-    }
-    console.log(adminRoutes)
-  } catch (e) {
-    res.status(400).send("Bad reqeust")
+  const {
+    adminEmail, adminRoutes
+  } = req.body
+  if (!adminEmail || !adminRoutes) {
+    res.status(400).send("Bad request")
     return
   }
+  console.log(adminRoutes)
 
   for (const route of adminRoutes) {
     if (!availableAdminRoutes.contains(route)) {
