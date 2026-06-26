@@ -777,14 +777,14 @@ router.get("/admin", async (req, res) => {
 
 
 router.post("/admin", checkApiKey, async (req, res) => {
-  const {
-    adminEmail, adminRoutes
-  } = req.body
-  if (!adminEmail || !adminRoutes) {
-    res.status(400).write("Bad request")
-  }
-
   try {
+    const {
+      adminEmail, adminRoutes
+    } = req.body
+    if (!adminEmail || !adminRoutes) {
+      res.status(400).write("Bad request")
+    }
+
     adminRoutes = JSON.parse(adminRoutes)
   } catch (e) {
     console.log("couldn't parse adminRoutes", adminRoutes, e)
@@ -800,7 +800,7 @@ router.post("/admin", checkApiKey, async (req, res) => {
 
   const admin = new Admin({ adminEmail, adminRoutes })
   try {
-    await Admin.save()
+    await admin.save()
     res.status(200).write("Successfully create an admin");
   } catch (e) {
     res.status(500).write("Couldn't create admin", e)
