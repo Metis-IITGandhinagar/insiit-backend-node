@@ -800,6 +800,7 @@ router.post("/admin", checkApiKey, async (req, res) => {
     res.status(200).send("Successfully create an admin");
   } catch (e) {
     res.status(500).send("Couldn't create admin", e)
+    return
   }
 })
 
