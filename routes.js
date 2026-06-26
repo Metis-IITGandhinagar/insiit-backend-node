@@ -760,16 +760,50 @@ router.post("/mess-menu/update-from-excel", checkApiKey, async (req, res) => {
 });
 
 
-router.get("/admin", checkApiKey, async (req, res) => {
+const availableAdminRoutes = ["createEvent", "updateMessMenu"];
+
+router.get("/admin", async (req, res) => {
   console.log("asking admin");
   const adminId = req.body.admin_id
-  try {
-    const admin = await Admin.findById(adminId)
-    res.status(201).json(admin)
-    return admin;
-  } catch (error) {
+  const admin = await Admin.findById(adminId)
+  if (!admin) {
     console.log("error fetching admin:", error)
     res.status(400).write("Couldn't find admin")
+  } else {
+    console.log("Found admin:", admin)
+    res.status(201).json(admin)
+  }
+})
+
+
+router.post("/admin", checkApiKey, async (req, res) => {
+  const {
+    adminEmail, adminRoutes
+  } = req.body
+  if (!adminEmail || !adminRoutes) {
+    res.status(400).text("Bad request")
+  }
+
+  try {
+    adminRoutes = JSON.parse(adminRoutes)
+  } catch (e) {
+    console.log("couldn't parse adminRoutes", adminRoutes, e)
+    res.status(400).text("Bad reqeust")
+  }
+
+  for (const route of adminRoutes) {
+    if (!availableAdminRoutes.contains(route)) {
+      console.log(route, "not available")
+      res.status(400).text("Bad request")
+    }
+  }
+
+  const admin = new Admin({ adminEmail, adminRoutes })
+  try {
+    await Admin.save()
+    res.status(200).write("Successfully create an admin");
+  } catch (e) {
+    res.status(500).write("Couldn't create admin", e)
   }
 })
 
