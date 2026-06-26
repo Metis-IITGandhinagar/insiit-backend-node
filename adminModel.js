@@ -8,7 +8,7 @@ const adminSchema = new mongoose.Schema({
     trim: true,
     lowercase: true
   },
-  availableRoutes: {
+  adminRoutes: {
     type: [String],
     default: []
   }

@@ -774,7 +774,7 @@ router.get("/admin", async (req, res) => {
       res.status(400).json({ "message": "Couldn't find admin" })
       return
     }
-    const admin = await Admin.find({ email: adminAccount.email })
+    const admin = await Admin.findOne({ email: adminAccount.email })
     if (!admin) {
       console.log("Admin not found")
       res.status(400).send({ "message": "Couldn't find admin" })
